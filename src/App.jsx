@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
-import { RecoilRoot, useRecoilState, useRecoilValue } from 'recoil'
-import { netWorkAtom, jobsAtom, notificationAtom, messagingAtom } from './atoms'
+import { RecoilRoot, useRecoilValue, useSetRecoilState } from 'recoil'
+import { jobsAtom, messagingAtom, networkAtom, notificationsAtom, totalNotificationSelector } from './atoms'
+import { useMemo } from 'react'
 
 
 function App() {
-  return (
-    <RecoilRoot>
-      <MainApp />
-    </RecoilRoot>
-  )
+  return <RecoilRoot>
+    <MainApp />
+  </RecoilRoot>
 }
 
 function MainApp() {
-  const [networkNotificationCount] = useRecoilState(netWorkAtom);
+  const networkNotificationCount = useRecoilValue(networkAtom)
   const jobsAtomCount = useRecoilValue(jobsAtom);
-  const notificationAtomCount = useRecoilValue(notificationAtom);
-  const [messagingAtomCount, setMessagingAtomCount] = useRecoilState(messagingAtom);
+  const notificationsAtomCount = useRecoilValue(notificationsAtom)
+  const messagingAtomCount = useRecoilValue(messagingAtom)
+  const totalNotificationCount = useRecoilValue(totalNotificationSelector);
+
+  // const totalNotificationCount = useMemo(() => {
+  //   return networkNotificationCount + jobsAtomCount + notificationsAtomCount + messagingAtomCount;
+  // }, [networkNotificationCount, jobsAtomCount, notificationsAtomCount, messagingAtomCount]) 
 
   return (
     <>
       <button>Home</button>
+      
       <button>My network ({networkNotificationCount >= 100 ? "99+" : networkNotificationCount})</button>
-      <button>Jobs ({jobsAtomCount})</button>
-      <button>Messaging ({notificationAtomCount})</button>
-      <button>Notification ({messagingAtomCount})</button>
-      <button onClick={() => {
-        setMessagingAtomCount(messagingAtomCount + 1);
-      }}>Me</button>
+      <button>Jobs {jobsAtomCount}</button>
+      <button>Messaging ({messagingAtomCount})</button>
+      <button>Notifications ({notificationsAtomCount})</button>
+
+      <button>Me ({totalNotificationCount})</button>
     </>
   )
 }
